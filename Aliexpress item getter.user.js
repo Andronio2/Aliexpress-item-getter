@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aliexpress item getter
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Получает ID, название, цену и конфигурацию
 // @author       Andronio
 // @homepage     https://github.com/Andronio2/Aliexpress-item-getter
@@ -110,17 +110,17 @@
         }
         item_conf = item_conf.slice(0, -1);
         let price = document.querySelector('.product-price-value, .uniform-banner-box-price, .product-price-current').textContent;
-        price = price.match(/\d{1,4}[,\.]\d{2}/);
+        price = price.match(/\d{1,3}\s\d{3},\d{2}|\d{1,3},\d{3}\.\d{2}|\d{1,3}[\.,]\d{2}/);
         if (price && price.length === 0) {
             console.log('Не нашел цену');
             return null;
         } else {
-            price = price[0];
+            price = price[0].replace(/(\d{1,3})\s(\d{3},\d{2})/, '$1$2').replace(/(\d{1,3}),(\d{3}\.\d{2})/, '$1$2');
         }
         let ship = document.querySelector('.Product_NewFreight__freight__vd1kn, .dynamic-shipping-line').textContent;
-        ship = ship.match(/\d{1,4}[,\.]\d{2}/);
+        ship = ship.match(/\d{1,3}\s\d{3},\d{2}|\d{1,3},\d{3}\.\d{2}|\d{1,3}[\.,]\d{2}/);
 		if (ship && ship.length > 0) {
-			ship = "+ " + ship[0] + ' ';
+			ship = "+ " + ship[0].replace(/(\d{1,3})\s(\d{3},\d{2})/, '$1$2').replace(/(\d{1,3}),(\d{3}\.\d{2})/, '$1$2') + ' ';
 		} else ship = "";
         let item_name = document.querySelector('.product-title, .Product_Name__container__hntp3').textContent.substring(0, 80);       // Укороченное имя;
         let item_id = location.href.match(/.+\.html/)[0];
