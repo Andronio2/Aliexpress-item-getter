@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aliexpress item getter
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  Получает ID, название, цену и конфигурацию
 // @author       Andronio
 // @homepage     https://github.com/Andronio2/Aliexpress-item-getter
@@ -109,8 +109,9 @@
             }
         }
         item_conf = item_conf.slice(0, -1);
-        let price = document.querySelector('.product-price-value, .uniform-banner-box-price, .product-price-current, .Product_UniformBanner__uniformBannerBoxPrice__o5qwb').textContent;
-        price = price.match(/\d{1,3}\s\d{3},\d{2}|\d{1,3},\d{3}\.\d{2}|\d{1,3}[\.,]\d{2}/);
+        let price = document.querySelector('.product-price-value,  .product-price-current');
+        if (!price) document.querySelector('.uniform-banner-box-price, .Product_UniformBanner__uniformBannerBoxPrice__o5qwb');
+        price = price.textContent.match(/\d{1,3}\s\d{3},\d{2}|\d{1,3},\d{3}\.\d{2}|\d{1,3}[\.,]\d{2}/);
         if (price && price.length === 0) {
             console.log('Не нашел цену');
             return null;
